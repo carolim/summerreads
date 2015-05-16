@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block body %}
+<div class="container" style="padding: 15%;">
+	<div class="row">
+		<div class="twelve columns" style="text-align:center;">
+			<form action="/" method="POST">
+				<h2>summer reads</h2>
+				{% if error %}
+					<p style="color: red;"> {{ error }} </p>
+				{% endif %}
+				<input type="text" placeholder="username" name="username" id="username"><br>
+				<input type="password" placeholder="password" name="password" id="password"><br>
+				<input class="button-primary" type="submit" value="log in">
+				{% csrf_token %}
+			</form>
+		</div>
+	</div>
+	</div>
+</div>
+{% endblock %}

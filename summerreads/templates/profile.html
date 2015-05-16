@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+{% block body %}
+<div class="row">
+	<div id="nav-bar-top">
+		<p><b>Currently Reading - 
+			{% for book in books %} 
+			{% if book.reading_status == "CUR" %}
+			{{ book.title }}, by {{ book.author }}
+			{% endif %}
+			{% endfor %}</b></p>
+	</div>
+</div>
+
+<div class="container" style="padding: 2%;">
+	<div class="row">
+		<div class="nine columns">
+			<h2>finished <a id="add_finished_book" name="add" href="#add_finished">+</a></h2>
+					<div id="add_finished" style="text-align: center;">
+						<h4>finished a new book?</h4>
+						<form action="/add/" method="POST">
+							{% if error %}
+								<p style="color: red;"> {{ error }} </p>
+							{% endif %}
+							<input type="text" placeholder="title" name="title" id="title"><br>
+							<input type="text" placeholder="author" name="author" id="author"><br>
+							<input type="hidden" name="status" value="FIN">
+							<input class="button-primary" type="submit" value="add to collection">
+							{% csrf_token %}
+						</form>
+					</div>
+			<div class="row">
+				<div class="nine columns">
+					<p>{% for book in books %}
+					{% if book.reading_status == "FIN" %}
+					<div class="clickable-row" bookNum={{ book.id }}>
+					{{ book.title }}</h3>, {{ book.author }}<br>
+					</div>
+					{% if book.quotes.all %}
+					<div class="bookQuote{{ book.id }}" style="display:none">
+						{% for quote in book.quotes.all %}
+						<p style="font-size:9.5px;"> 
+							{{ quote.text }} {% if quote.page_number %} - pg{{ quote.page_number }}.{% endif %}
+						{% endfor %}
+						<br><br>
+						<a id="add_quote_{{ book.id }}" name="addquote" href="#add_quote_{{ book.id }}" style="font-size:9.5px; text-decoration:none;">add more quotes</a></p>
+					</div>
+					{% endif %}
+					{% endif %}
+					{% endfor %}</p>
+				</div>
+			</div>
+		</div>
+		<div class="three columns" style="text-align: right;">
+			<a href="/logout">logout</a>
+		</div>
+	</div>
+
+	<br><br>
+
+	<div class="row">
+		<div class="nine columns">
+			<h2>unfinished <a id="add_wishlist_book" name="add" href="#add_wishlist">+</a></h2>
+					<div id="add_wishlist" style="text-align: center;">
+						<h4>want to read a new book?</h4>
+						<form action="/add/" method="POST">
+							{% if error %}
+								<p style="color: red;"> {{ error }} </p>
+							{% endif %}
+							<input type="text" placeholder="title" name="title" id="title"><br>
+							<input type="text" placeholder="author" name="author" id="author"><br>
+							<input type="hidden" name="status" value="WNT">
+							<input class="button-primary" type="submit" value="add to collection">
+							{% csrf_token %}
+						</form>
+					</div>
+			<div class="row">
+				<div class="nine columns">
+					<p>{% for book in books %}
+					{% if book.reading_status == "WNT" %}
+					{{ book.title }}</h3>, {{ book.author }}<br>
+					{% endif %}
+					{% endfor %}</p>
+				</div>
+			</div>
+		</div>
+		<div class="three columns" style="text-align: right;">
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+	$("#add_finished_book").leanModal();
+	$("#add_wishlist_book").leanModal();
+
+  	jQuery(document).ready(function($) {
+      $(".clickable-row").click(function(e){
+        e.preventDefault();
+        $('.bookQuote'+$(this).attr('bookNum')).toggle();
+    });
+  });
+</script>
+{% endblock %}
