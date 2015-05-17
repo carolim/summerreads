@@ -1,21 +1,15 @@
 {% extends "base.html" %}
 {% block body %}
-<div class="row">
-	<div id="nav-bar-top">
-		<p><b>Currently Reading - 
-			{% for book in books %} 
-			{% if book.reading_status == "CUR" %}
-			{{ book.title }}, by {{ book.author }}
-			{% endif %}
-			{% endfor %}</b></p>
-	</div>
-</div>
-
 <div class="container" style="padding: 2%;">
-	<div class="row">
-		<div class="nine columns">
+	<div class="row" style="text-align:center; padding: 2%">
+		<img src="/static/icon.png" style="width:15%; height:15%; padding-bottom:2%"><br>
+		<a href="/profile" class="nav-bar-links">profile</a>
+		<a href="/friends" class="nav-bar-links">friends</a>
+		<a href="/logout" class="nav-bar-links">logout</a>
+	</div>
+	<div class="row" style="text-align:center;">
 			<h2>finished <a id="add_finished_book" name="add" href="#add_finished">+</a></h2>
-					<div id="add_finished" style="text-align: center;">
+					<div id="add_finished" style="text-align: center">
 						<h4>finished a new book?</h4>
 						<form action="/add/" method="POST">
 							{% if error %}
@@ -29,36 +23,25 @@
 						</form>
 					</div>
 			<div class="row">
-				<div class="nine columns">
 					<p>{% for book in books %}
 					{% if book.reading_status == "FIN" %}
-					<div class="clickable-row" bookNum={{ book.id }}>
-					{{ book.title }}</h3>, {{ book.author }}<br>
-					</div>
-					{% if book.quotes.all %}
-					<div class="bookQuote{{ book.id }}" style="display:none">
+					<div class="clickable-row" bookNum={{ book.id }}>{{ book.title }}</h3>, {{ book.author }}</div>
+					<div class="bookinfo-{{ book.id }}" style="display:none">
+						{% if book.quotes.all %}
 						{% for quote in book.quotes.all %}
 						<p style="font-size:9.5px;"> 
 							{{ quote.text }} {% if quote.page_number %} - pg{{ quote.page_number }}.{% endif %}
 						{% endfor %}
-						<br><br>
-						<a id="add_quote_{{ book.id }}" name="addquote" href="#add_quote_{{ book.id }}" style="font-size:9.5px; text-decoration:none;">add more quotes</a></p>
+						</p>
+						<p class="small_links"><a name="add_quote" href="#add_quote" style="padding-right:10px; text-decoration:none;">add quote</a> <a href="/delete/book/{{ book.id }}" style="text-decoration:none;">{% endif %}delete book</a></p> 
 					</div>
-					{% endif %}
 					{% endif %}
 					{% endfor %}</p>
 				</div>
-			</div>
-		</div>
-		<div class="three columns" style="text-align: right;">
-			<a href="/logout">logout</a>
 		</div>
 	</div>
 
-	<br><br>
-
-	<div class="row">
-		<div class="nine columns">
+	<div class="row" style="text-align:center;">
 			<h2>unfinished <a id="add_wishlist_book" name="add" href="#add_wishlist">+</a></h2>
 					<div id="add_wishlist" style="text-align: center;">
 						<h4>want to read a new book?</h4>
@@ -74,17 +57,15 @@
 						</form>
 					</div>
 			<div class="row">
-				<div class="nine columns">
 					<p>{% for book in books %}
 					{% if book.reading_status == "WNT" %}
-					{{ book.title }}</h3>, {{ book.author }}<br>
+					<div class="clickable-row" bookNum={{ book.id }}>{{ book.title }}</h3>, {{ book.author }}</div>
+					<div class="bookinfo-{{ book.id }}" style="display:none">
+						<p class="small_links"><a href="/delete/book/{{ book.id }}" style="text-decoration:none;">delete book</a></p> 
+					</div>
 					{% endif %}
 					{% endfor %}</p>
 				</div>
-			</div>
-		</div>
-		<div class="three columns" style="text-align: right;">
-		</div>
 	</div>
 </div>
 
@@ -95,7 +76,7 @@
   	jQuery(document).ready(function($) {
       $(".clickable-row").click(function(e){
         e.preventDefault();
-        $('.bookQuote'+$(this).attr('bookNum')).toggle();
+        $('.bookinfo-'+$(this).attr('bookNum')).toggle();
     });
   });
 </script>

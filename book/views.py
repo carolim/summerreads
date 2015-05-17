@@ -6,7 +6,7 @@ from django.contrib.auth import authenticate, logout, login
 from django.shortcuts import render_to_response
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
-from book.models import Book
+from book.models import Book, UserProfile
 import datetime
 
 
@@ -47,4 +47,19 @@ def add_book(request):
 		return HttpResponseRedirect("/profile")
 	else:
 		return HttpResponseNotAllowed(["POST"])
+
+@login_required
+def delete_book(request, id):
+	book = Book.objects.filter(id=id)
+	if book is not None:
+		book.delete()
+		#TODO: delete all QUOTES associated with book
+	else:
+		print "something's wrong"
+	return HttpResponseRedirect("/profile")
+
+@login_required
+def friend_list(request):
+	return render(request, "friends.html", {"info": UserProfile.objects.filter(user=request.user.id)})
+
 

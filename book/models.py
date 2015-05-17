@@ -2,6 +2,11 @@ from django.db import models
 from django.contrib.auth.models import User
 from djangoratings.fields import AnonymousRatingField
 
+class UserProfile(models.Model):
+    user = models.ForeignKey(User)
+    friends = models.ManyToManyField(User, related_name="user_friends", blank=True, null=True)
+
+
 class Book(models.Model):
     user = models.ForeignKey(User)
     title = models.CharField(max_length=100, blank=True, null=True)

@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block body %}
+<div class="row">
+	<div id="nav-bar-top">
+		<div class="nine columns">
+			<p><b>Currently Reading - {% for book in books %} {% if book.reading_status == "CUR" %}{{ book.title }}, by {{ book.author }}{% endif %}{% endfor %}</b></p>
+		</div>
+		<div class="three columns" style="text-align:center; padding-right: 5%">
+			<a href="/profile" class="nav-bar-links">profile</a>
+			<a href="/friends" class="nav-bar-links">friends</a>
+			<a href="/logout" class="nav-bar-links">logout</a>
+		</div>
+	</div>
+</div>
+
+<div class="container" style="padding: 2%;">
+	<div class="row">
+		<div class="nine columns">
+			{{ info.user.email }}
+			<p>{% for friend in info.friends.all %}
+				<a href="/{{ friend.username }}">{{ friend.first_name }}</a>
+				HELLO
+				{% endfor %}
+			</p>
+		</div>
+	</div>
+</div>
+{% endblock %}
